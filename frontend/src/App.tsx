@@ -16,7 +16,7 @@ interface WalletData {
     address: string;
     name: string;
     pnl: number;
-    volume: number;
+    volumn: number;
     recent_update: string;
 }
 
@@ -88,7 +88,7 @@ const Dashboard: React.FC = () => {
                                         <TableCell align="center">Name</TableCell>
                                         <TableCell align="center">Address</TableCell>
                                         <TableCell align="center">PnL&nbsp;($)</TableCell>
-                                        <TableCell align="center">Volume&nbsp;($)</TableCell>
+                                        <TableCell align="center">volumn&nbsp;($)</TableCell>
                                         <TableCell align="center">Last Update</TableCell>
                                         <TableCell align="center">Actions</TableCell>
                                     </TableRow>
@@ -114,7 +114,7 @@ const Dashboard: React.FC = () => {
                                         </TableCell>
                                         <TableCell align="center">{row.address}</TableCell>
                                         <TableCell align="center">{row.pnl}</TableCell>
-                                        <TableCell align="center">{row.volume}</TableCell>
+                                        <TableCell align="center">{row.volumn}</TableCell>
                                         <TableCell align="center">{row.recent_update}</TableCell>
                                         <TableCell align="center">
                                             {editRowIndex === index ? (
