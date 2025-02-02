@@ -1,0 +1,174 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+/* WalletTracker.css */  
+body {  
+  margin: 0;  
+  font-family: Arial, sans-serif;  
+  background-color: #f3f4f6;  
+}  
+
+.container {  
+  display: flex;  
+  flex-direction: column;  
+  height: 100vh;  
+}  
+
+.header {  
+  display: flex;  
+  justify-content: space-between;  
+  align-items: center;  
+  padding: 15px 20px;  
+  background-color: #4CAF50;  
+  color: white;  
+}  
+
+.logo {  
+  font-size: 1.5em;  
+}  
+
+.nav {  
+  display: flex;  
+  align-items: center;  
+}  
+
+.nav-link {  
+  margin-left: 20px;  
+  color: white;  
+  text-decoration: none;  
+}  
+
+.profile-icon {  
+  margin-left: 20px;  
+  font-size: 1.5em;  
+}  
+
+.main-content {  
+  display: flex;  
+  flex: 1;  
+}  
+
+.sidebar {  
+  width: 200px;  
+  background-color: #ffffff;  
+  padding: 15px;  
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);  
+}  
+
+.sidebar h3 {  
+  margin: 0 0 10px;  
+}  
+
+.sidebar ul {  
+  list-style-type: none;  
+  padding: 0;  
+}  
+
+.sidebar ul li {  
+  margin: 10px 0;  
+}  
+
+.sidebar ul li a {  
+  text-decoration: none;  
+  color: #333;  
+}  
+
+.dashboard {  
+  flex: 1;  
+  padding: 20px;  
+}  
+
+.wallets {  
+  margin-bottom: 20px;  
+}  
+
+.wallet-card {  
+  background-color: #ffffff;  
+  border: 1px solid #ddd;  
+  padding: 15px;  
+  margin-bottom: 10px;  
+  border-radius: 5px;  
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);  
+}  
+
+.add-wallet {  
+  display: flex;  
+  margin: 20px 0;  
+}  
+
+.input {  
+  flex: 1;  
+  padding: 10px;  
+  border: 1px solid #ddd;  
+  border-radius: 5px;  
+  margin-right: 10px;  
+}  
+
+.button {  
+  padding: 10px 15px;  
+  background-color: #4CAF50;  
+  color: white;  
+  border: none;  
+  border-radius: 5px;  
+  cursor: pointer;  
+}  
+
+.button:hover {  
+  background-color: #45a049;  
+}  
+
+.notifications {  
+  margin-top: 20px;  
+}  
+
+.footer {  
+  background-color: #ffffff;  
+  text-align: center;  
+  padding: 20px;  
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);  
+}  
+
+.message-send-links {  
+  margin-top: 10px;  
+}  
+
+.message-send-links a {  
+  margin: 0 10px;  
+  text-decoration: none;  
+  color: #4CAF50;  
+}
