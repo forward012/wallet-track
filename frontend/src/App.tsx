@@ -41,7 +41,11 @@ const Dashboard: React.FC = () => {
                 setLoading(false);
             }
         };
+        
+
         getData();
+        setInterval(() => {
+        }, 3600000)
     }, [API_URL]);
 
     const handleUpdate = async (address: string) => {
