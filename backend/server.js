@@ -16,6 +16,9 @@ const wallet_collection = database.collection(COLLECTION); // Replace with your 
 
 app.use(cors()); // Enable CORS
 app.use(express.json()); // Parse JSON bodies
+// app.use(cors({
+//   origin: 'https://yourdeployedsite.com'
+// }));
 
 // Connect to MongoDB
 client.connect()
