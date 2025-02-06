@@ -134,7 +134,7 @@ const Dashboard: React.FC = () => {
         name: name,
         address: address,
         pnl: parseFloat(pnl_), // Convert pnl to number
-        volume: parseFloat(volumn_), // Convert volume to number
+        volumn: parseFloat(volumn_), // Convert volume to number
       });
       console.log("Response:", response.data);
       alert("Successfully Added!");
