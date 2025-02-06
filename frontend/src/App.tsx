@@ -30,6 +30,11 @@ const Dashboard: React.FC = () => {
   const [newName, setNewName] = useState<string>("");
   const [searchText, setSearchText] = useState<string>("");
 
+  const [address, setAddress] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [pnl, setPnl] = useState<string>("");
+  const [volumn, setVolumn] = useState<string>("");
+
   useEffect(() => {
     const getData = async () => {
       try {
@@ -49,7 +54,7 @@ const Dashboard: React.FC = () => {
   }, [API_URL]);
 
   const onUpdate = () => {
-    setSearchText('');
+    setSearchText("");
     const getData = async () => {
       try {
         const response = await axios.get<WalletData[]>(`${API_URL}/api/data`);
@@ -104,6 +109,35 @@ const Dashboard: React.FC = () => {
         setData([]);
         setData([response.data]);
       }
+    } catch (err) {
+      alert(err);
+    }
+  };
+
+  const addNewWallet = async () => {
+    if (!name || !address) {
+      // Corrected condition
+      return alert("Please fill all fields");
+    }
+    try {
+      let pnl_ = Math.floor(
+        Math.random() * (1000000 - 250000) + 250000
+      ).toString();
+      let volumn_ = "0";
+      if (pnl != "") {
+        pnl_ = pnl;
+      }
+      if (volumn != "") {
+        volumn_ = volumn;
+      }
+      const response = await axios.post(`${API_URL}/api/addNewWallet`, {
+        name: name,
+        address: address,
+        pnl: parseFloat(pnl_), // Convert pnl to number
+        volume: parseFloat(volumn_), // Convert volume to number
+      });
+      console.log("Response:", response.data);
+      alert("Successfully Added!");
     } catch (err) {
       alert(err);
     }
@@ -178,6 +212,114 @@ const Dashboard: React.FC = () => {
             onBlur={(e) => (e.target.style.borderColor = "#ccc")}
           />
         </div>
+        <div
+          style={{
+            marginTop: "8px",
+            marginLeft: "30px",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <button
+            style={{
+              height: "30px",
+              padding: "0 20px",
+              borderRadius: "5px",
+              border: "none",
+              backgroundColor: "#007BFF",
+              color: "#fff",
+              fontSize: "16px",
+              cursor: "pointer",
+              transition: "background-color 0.3s",
+              marginRight: "20px",
+            }}
+            onClick={addNewWallet}
+          >
+            Add New Wallet
+          </button>
+
+          <div>
+            Name:
+            <input
+              style={{
+                width: "100px",
+                height: "30px",
+                padding: "0 15px",
+                borderRadius: "5px",
+                border: "1px solid #ccc",
+                boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+                marginRight: "10px",
+                marginLeft: "5px",
+                fontSize: "16px",
+                outline: "none",
+                transition: "border-color 0.3s",
+              }}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+          <div>
+            Address:
+            <input
+              style={{
+                width: "100px",
+                height: "30px",
+                padding: "0 15px",
+                borderRadius: "5px",
+                border: "1px solid #ccc",
+                boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+                marginRight: "10px",
+                marginLeft: "5px",
+                fontSize: "16px",
+                outline: "none",
+                transition: "border-color 0.3s",
+              }}
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+            />
+          </div>
+          <div>
+            PnL:
+            <input
+              style={{
+                width: "100px",
+                height: "30px",
+                padding: "0 15px",
+                borderRadius: "5px",
+                border: "1px solid #ccc",
+                boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+                marginRight: "10px",
+                marginLeft: "5px",
+                fontSize: "16px",
+                outline: "none",
+                transition: "border-color 0.3s",
+              }}
+              value={pnl}
+              onChange={(e) => setPnl(e.target.value)}
+            />
+          </div>
+          <div>
+            Volumn:
+            <input
+              style={{
+                width: "100px",
+                height: "30px",
+                padding: "0 15px",
+                borderRadius: "5px",
+                border: "1px solid #ccc",
+                boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+                marginRight: "10px",
+                marginLeft: "5px",
+                fontSize: "16px",
+                outline: "none",
+                transition: "border-color 0.3s",
+              }}
+              value={volumn}
+              onChange={(e) => setVolumn(e.target.value)}
+            />
+          </div>
+        </div>
+
         <main className="dashboard">
           <div>
             <TableContainer component={Paper}>
