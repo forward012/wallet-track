@@ -49,6 +49,7 @@ const Dashboard: React.FC = () => {
   }, [API_URL]);
 
   const onUpdate = () => {
+    setSearchText('');
     const getData = async () => {
       try {
         const response = await axios.get<WalletData[]>(`${API_URL}/api/data`);
