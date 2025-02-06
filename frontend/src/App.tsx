@@ -141,6 +141,10 @@ const Dashboard: React.FC = () => {
     } catch (err) {
       alert(err);
     }
+    setName("");
+    setAddress("");
+    setPnl("");
+    setVolumn("");
   };
 
   if (loading) return <div>Loading...</div>;
