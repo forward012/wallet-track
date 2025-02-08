@@ -185,19 +185,21 @@ const Dashboard: React.FC = () => {
         if (Number(pnl_) > 250000) {
           localData.push({ address: address, pnl: pnl_, volumn: volumn_ });
           alert(`👍Passed! You can add this wallet! Pnl is ${pnl_}`);
+          const response = await axios.post(`${API_URL}/api/addNewWallet`, {
+            name: name,
+            address: address,
+            pnl: parseFloat(pnl_.toString()), // Convert pnl to number
+            volumn: parseFloat(volumn_.toString()), // Convert volume to number
+          });
+          console.log("Response:", response.data);
+          alert("Successfully Added!");
+
+          return;
         } else {
           localData.push({ address: address, pnl: pnl_, volumn: volumn_ });
           alert(`👎Not passed! You can't add this wallet! Pnl is ${pnl_}`);
+          return;
         }
-
-        const response = await axios.post(`${API_URL}/api/addNewWallet`, {
-          name: name,
-          address: address,
-          pnl: parseFloat(pnl_.toString()), // Convert pnl to number
-          volumn: parseFloat(volumn_.toString()), // Convert volume to number
-        });
-        console.log("Response:", response.data);
-        alert("Successfully Added!");
       } catch (err) {
         alert(err);
       }
