@@ -131,21 +131,7 @@ const Dashboard: React.FC = () => {
       return alert("❗️The wallet address is invalid.");
     }
 
-    const isExist_ = localData.filter((val) => {
-      return address == val.address;
-    });
-
-    if (isExist_.length > 0) {
-      if (Number(isExist_[0].pnl) > 250000) {
-        alert(`👍Passed! You can add this wallet! Pnl is ${isExist_[0].pnl}`);
-      } else {
-        alert(
-          `👎Not passed! You can't add this wallet! Pnl is ${isExist_[0].pnl}`
-        );
-      }
-    }
-
-    const isExist = localData.filter((val) => {
+    const isExist = data.filter((val) => {
       return address == val.address;
     });
 
@@ -154,7 +140,36 @@ const Dashboard: React.FC = () => {
     if (isExist.length > 0) {
       return alert("This wallet already existed!");
     }
+    
+    const isExist_ = localData.filter((val) => {
+      return address == val.address;
+    });
 
+    if (isExist_.length > 0) {
+      if (Number(isExist_[0].pnl) > 250000) {
+        alert(`👍Passed! You can add this wallet! Pnl is ${isExist_[0].pnl}`);
+        try {
+          const response = await axios.post(`${API_URL}/api/addNewWallet`, {
+            name: name,
+            address: address,
+            pnl: parseFloat((isExist_[0].pnl).toString()), // Convert pnl to number
+            volumn: parseFloat((isExist_[0].volumn).toString()), // Convert volume to number
+          });
+          console.log("Response:", response.data);
+          alert("Successfully Added!");
+        } catch (err) {
+          alert(err);
+        }
+            
+        return;
+      } else {
+        alert(
+          `👎Not passed! You can't add this wallet! Pnl is ${isExist_[0].pnl}`
+        );
+        return;
+      }
+    }
+   
     function generateRandomNumber(min: number, max: number) {
       // Generate a random number between 250,000 and 1,000,000 (or any upper limit you choose)
       const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
