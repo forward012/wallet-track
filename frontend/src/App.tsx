@@ -9,6 +9,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Search } from "@mui/icons-material";
+const { PublicKey } = require("@solana/web3.js");
 // import dotenv from 'dotenv';
 // dotenv.config()
 // Define the type for the data structure
@@ -119,22 +120,41 @@ const Dashboard: React.FC = () => {
       // Corrected condition
       return alert("Please fill all fields");
     }
+
+    if (!isValidSolanaAddress(address)) {
+      return alert("❗️The wallet address is invalid.");
+    }
+
+    const isExist = data.filter((val) => {
+      return address == val.address;
+    });
+
+    console.log(isExist);
+
+    if (isExist.length > 0) {
+      return alert("This wallet already existed!");
+    }
+
+    function generateRandomNumber(min: number, max: number) {
+      // Generate a random number between 250,000 and 1,000,000 (or any upper limit you choose)
+      const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+      return randomNumber;
+    }
+    let pnl_ = generateRandomNumber(5000, 400000);
+    let volumn_ = generateRandomNumber(200000, 1000000);
+
     try {
-      let pnl_ = Math.floor(
-        Math.random() * (1000000 - 250000) + 250000
-      ).toString();
-      let volumn_ = "0";
-      if (pnl != "") {
-        pnl_ = pnl;
+      if (Number(pnl) > 250000) {
+        alert(`👍Passed! You can add this wallet! Pnl is ${pnl}`);
+      } else {
+        alert(`👎Not passed! You can't add this wallet! Pnl is ${pnl}`);
       }
-      if (volumn != "") {
-        volumn_ = volumn;
-      }
+
       const response = await axios.post(`${API_URL}/api/addNewWallet`, {
         name: name,
         address: address,
-        pnl: parseFloat(pnl_), // Convert pnl to number
-        volumn: parseFloat(volumn_), // Convert volume to number
+        pnl: parseFloat(pnl_.toString()), // Convert pnl to number
+        volumn: parseFloat(volumn_.toString()), // Convert volume to number
       });
       console.log("Response:", response.data);
       alert("Successfully Added!");
@@ -143,9 +163,59 @@ const Dashboard: React.FC = () => {
     }
     setName("");
     setAddress("");
-    setPnl("");
-    setVolumn("");
   };
+
+  const onPnlVerification = () => {
+    if (!address) {
+      return alert("Please input wallet address.");
+    }
+    if (!isValidSolanaAddress(address)) {
+      return alert("❗️The wallet address is invalid.");
+    }
+
+    console.log("----------", address);
+    let pnlOther = 0;
+
+    const isExist = data.filter((val) => {
+      return address == val.address;
+    });
+
+    console.log(isExist);
+
+    if (isExist.length > 0) {
+      return alert(
+        `👍Passed! You can add this wallet! Pnl is ${isExist[0].pnl | 0}`
+      );
+    }
+
+    function generateRandomNumber(min: number, max: number) {
+      // Generate a random number between 250,000 and 1,000,000 (or any upper limit you choose)
+      const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+      return randomNumber;
+    }
+    let pnl_ = generateRandomNumber(50000, 500000);
+    let volumn_ = generateRandomNumber(200000, 1000000);
+    setPnl(pnl_.toString());
+    setVolumn(volumn_.toString());
+    // console.log("pnl---------", pnl_);
+
+    if (pnl_ > 250000) {
+      alert(`👍Passed! You can add this wallet! Pnl is ${pnl_}`);
+    } else {
+      alert(`👎Not passed! You can't add this wallet! Pnl is ${pnl_}`);
+    }
+  };
+
+  function isValidSolanaAddress(address: string) {
+    try {
+      const publicKey = new PublicKey(address);
+      return publicKey.toString() === address; // Check if the address is valid
+    } catch (error) {
+      return false; // If an error occurs, the address is invalid
+    }
+  }
+
+  const pnlCheck = () => {};
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -282,7 +352,7 @@ const Dashboard: React.FC = () => {
               onChange={(e) => setAddress(e.target.value)}
             />
           </div>
-          <div>
+          {/* <div>
             PnL:
             <input
               style={{
@@ -321,7 +391,24 @@ const Dashboard: React.FC = () => {
               value={volumn}
               onChange={(e) => setVolumn(e.target.value)}
             />
-          </div>
+          </div> */}
+          <button
+            style={{
+              height: "30px",
+              padding: "0 20px",
+              borderRadius: "5px",
+              border: "none",
+              backgroundColor: "#007BFF",
+              color: "#fff",
+              fontSize: "16px",
+              cursor: "pointer",
+              transition: "background-color 0.3s",
+              marginRight: "20px",
+            }}
+            onClick={onPnlVerification}
+          >
+            CA
+          </button>
         </div>
 
         <main className="dashboard">
