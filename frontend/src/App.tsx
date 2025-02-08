@@ -137,11 +137,11 @@ const Dashboard: React.FC = () => {
 
     if (isExist_.length > 0) {
       if (Number(isExist_[0].pnl) > 250000) {
-        localData.push({ address: address, pnl: isExist_[0].pnl });
-        alert(`👍Passed! You can add this wallet! Pnl is ${pnl}`);
+        alert(`👍Passed! You can add this wallet! Pnl is ${isExist_[0].pnl}`);
       } else {
-        localData.push({ address: address, pnl: isExist_[0].pnl });
-        alert(`👎Not passed! You can't add this wallet! Pnl is ${pnl}`);
+        alert(
+          `👎Not passed! You can't add this wallet! Pnl is ${isExist_[0].pnl}`
+        );
       }
     }
 
@@ -213,11 +213,11 @@ const Dashboard: React.FC = () => {
 
     if (isExist_.length > 0) {
       if (Number(isExist_[0].pnl) > 250000) {
-        localData.push({ address: address, pnl: isExist_[0].pnl });
-        alert(`👍Passed! You can add this wallet! Pnl is ${pnl}`);
+        alert(`👍Passed! You can add this wallet! Pnl is ${isExist_[0].pnl}`);
       } else {
-        localData.push({ address: address, pnl: isExist_[0].pnl });
-        alert(`👎Not passed! You can't add this wallet! Pnl is ${pnl}`);
+        alert(
+          `👎Not passed! You can't add this wallet! Pnl is ${isExist_[0].pnl}`
+        );
       }
     }
 
@@ -239,6 +239,7 @@ const Dashboard: React.FC = () => {
       localData.push({ address: address, pnl: pnl_ });
       alert(`👎Not passed! You can't add this wallet! Pnl is ${pnl_}`);
     }
+    setAddress("");
   };
 
   function isValidSolanaAddress(address: string) {
