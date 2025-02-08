@@ -36,6 +36,12 @@ const Dashboard: React.FC = () => {
   const [pnl, setPnl] = useState<string>("");
   const [volumn, setVolumn] = useState<string>("");
 
+  interface LocalData {
+    address: string;
+    pnl: number;
+  }
+
+  const localData: LocalData[] = [];
   useEffect(() => {
     const getData = async () => {
       try {
@@ -125,7 +131,21 @@ const Dashboard: React.FC = () => {
       return alert("❗️The wallet address is invalid.");
     }
 
-    const isExist = data.filter((val) => {
+    const isExist_ = localData.filter((val) => {
+      return address == val.address;
+    });
+
+    if (isExist_.length > 0) {
+      if (Number(isExist_[0].pnl) > 250000) {
+        localData.push({ address: address, pnl: isExist_[0].pnl });
+        alert(`👍Passed! You can add this wallet! Pnl is ${pnl}`);
+      } else {
+        localData.push({ address: address, pnl: isExist_[0].pnl });
+        alert(`👎Not passed! You can't add this wallet! Pnl is ${pnl}`);
+      }
+    }
+
+    const isExist = localData.filter((val) => {
       return address == val.address;
     });
 
@@ -145,8 +165,10 @@ const Dashboard: React.FC = () => {
 
     try {
       if (Number(pnl) > 250000) {
+        localData.push({ address: address, pnl: pnl_ });
         alert(`👍Passed! You can add this wallet! Pnl is ${pnl}`);
       } else {
+        localData.push({ address: address, pnl: pnl_ });
         alert(`👎Not passed! You can't add this wallet! Pnl is ${pnl}`);
       }
 
@@ -174,18 +196,29 @@ const Dashboard: React.FC = () => {
     }
 
     console.log("----------", address);
-    let pnlOther = 0;
 
     const isExist = data.filter((val) => {
       return address == val.address;
     });
 
-    console.log(isExist);
-
     if (isExist.length > 0) {
       return alert(
         `👍Passed! You can add this wallet! Pnl is ${isExist[0].pnl | 0}`
       );
+    }
+
+    const isExist_ = localData.filter((val) => {
+      return address == val.address;
+    });
+
+    if (isExist_.length > 0) {
+      if (Number(isExist_[0].pnl) > 250000) {
+        localData.push({ address: address, pnl: isExist_[0].pnl });
+        alert(`👍Passed! You can add this wallet! Pnl is ${pnl}`);
+      } else {
+        localData.push({ address: address, pnl: isExist_[0].pnl });
+        alert(`👎Not passed! You can't add this wallet! Pnl is ${pnl}`);
+      }
     }
 
     function generateRandomNumber(min: number, max: number) {
@@ -200,8 +233,10 @@ const Dashboard: React.FC = () => {
     // console.log("pnl---------", pnl_);
 
     if (pnl_ > 250000) {
+      localData.push({ address: address, pnl: pnl_ });
       alert(`👍Passed! You can add this wallet! Pnl is ${pnl_}`);
     } else {
+      localData.push({ address: address, pnl: pnl_ });
       alert(`👎Not passed! You can't add this wallet! Pnl is ${pnl_}`);
     }
   };
