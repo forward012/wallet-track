@@ -177,35 +177,30 @@ const Dashboard: React.FC = () => {
         );
         return;
       }
-    }
+    } else {
+      let pnl_ = generateRandomNumber(5000, 350000);
+      let volumn_ = generateRandomNumber(200000, 1000000);
 
-    // function generateRandomNumber(min: number, max: number) {
-    //   // Generate a random number between 250,000 and 1,000,000 (or any upper limit you choose)
-    //   const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-    //   return randomNumber;
-    // }
-    let pnl_ = generateRandomNumber(5000, 350000);
-    let volumn_ = generateRandomNumber(200000, 1000000);
+      try {
+        if (Number(pnl_) > 250000) {
+          localData.push({ address: address, pnl: pnl_, volumn: volumn_ });
+          alert(`👍Passed! You can add this wallet! Pnl is ${pnl_}`);
+        } else {
+          localData.push({ address: address, pnl: pnl_, volumn: volumn_ });
+          alert(`👎Not passed! You can't add this wallet! Pnl is ${pnl_}`);
+        }
 
-    try {
-      if (Number(pnl_) > 250000) {
-        localData.push({ address: address, pnl: pnl_, volumn: volumn_ });
-        alert(`👍Passed! You can add this wallet! Pnl is ${pnl_}`);
-      } else {
-        localData.push({ address: address, pnl: pnl_, volumn: volumn_ });
-        alert(`👎Not passed! You can't add this wallet! Pnl is ${pnl_}`);
+        const response = await axios.post(`${API_URL}/api/addNewWallet`, {
+          name: name,
+          address: address,
+          pnl: parseFloat(pnl_.toString()), // Convert pnl to number
+          volumn: parseFloat(volumn_.toString()), // Convert volume to number
+        });
+        console.log("Response:", response.data);
+        alert("Successfully Added!");
+      } catch (err) {
+        alert(err);
       }
-
-      const response = await axios.post(`${API_URL}/api/addNewWallet`, {
-        name: name,
-        address: address,
-        pnl: parseFloat(pnl_.toString()), // Convert pnl to number
-        volumn: parseFloat(volumn_.toString()), // Convert volume to number
-      });
-      console.log("Response:", response.data);
-      alert("Successfully Added!");
-    } catch (err) {
-      alert(err);
     }
     setName("");
     setAddress("");
@@ -243,27 +238,27 @@ const Dashboard: React.FC = () => {
           `👎Not passed! You can't add this wallet! Pnl is ${isExist_[0].pnl}`
         );
       }
-    }
-
-    function generateRandomNumber(min: number, max: number) {
-      // Generate a random number between 250,000 and 1,000,000 (or any upper limit you choose)
-      const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-      return randomNumber;
-    }
-    let pnl_ = generateRandomNumber(50000, 500000);
-    let volumn_ = generateRandomNumber(200000, 1000000);
-    setPnl(pnl_.toString());
-    setVolumn(volumn_.toString());
-    // console.log("pnl---------", pnl_);
-
-    if (pnl_ > 250000) {
-      localData.push({ address: address, pnl: pnl_, volumn: volumn_ });
-      alert(`👍Passed! You can add this wallet! Pnl is ${pnl_}`);
     } else {
-      localData.push({ address: address, pnl: pnl_, volumn: volumn_ });
-      alert(`👎Not passed! You can't add this wallet! Pnl is ${pnl_}`);
+      // function generateRandomNumber(min: number, max: number) {
+      //   // Generate a random number between 250,000 and 1,000,000 (or any upper limit you choose)
+      //   const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+      //   return randomNumber;
+      // }
+      let pnl_ = generateRandomNumber(50000, 500000);
+      let volumn_ = generateRandomNumber(200000, 1000000);
+      setPnl(pnl_.toString());
+      setVolumn(volumn_.toString());
+      // console.log("pnl---------", pnl_);
+
+      if (pnl_ > 250000) {
+        localData.push({ address: address, pnl: pnl_, volumn: volumn_ });
+        alert(`👍Passed! You can add this wallet! Pnl is ${pnl_}`);
+      } else {
+        localData.push({ address: address, pnl: pnl_, volumn: volumn_ });
+        alert(`👎Not passed! You can't add this wallet! Pnl is ${pnl_}`);
+      }
+      setAddress("");
     }
-    setAddress("");
   };
 
   function isValidSolanaAddress(address: string) {
