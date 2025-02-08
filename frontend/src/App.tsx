@@ -165,13 +165,20 @@ const Dashboard: React.FC = () => {
             volumn: parseFloat(isExist_[0].volumn.toString()), // Convert volume to number
           });
           console.log("Response:", response.data);
+          setName("");
+          setAddress("");
           alert("Successfully Added!");
+          return;
         } catch (err) {
+          setName("");
+          setAddress("");
           alert(err);
         }
 
         return;
       } else {
+        setName("");
+        setAddress("");
         alert(
           `👎Not passed! You can't add this wallet! Pnl is ${isExist_[0].pnl}`
         );
@@ -184,7 +191,7 @@ const Dashboard: React.FC = () => {
       try {
         if (Number(pnl_) > 250000) {
           localData.push({ address: address, pnl: pnl_, volumn: volumn_ });
-          alert(`👍Passed! You can add this wallet! Pnl is ${pnl_}`);
+          alert(`👍 Passed! You can add this wallet! Pnl is ${pnl_}`);
           const response = await axios.post(`${API_URL}/api/addNewWallet`, {
             name: name,
             address: address,
@@ -193,11 +200,14 @@ const Dashboard: React.FC = () => {
           });
           console.log("Response:", response.data);
           alert("Successfully Added!");
-
+          setName("");
+          setAddress("");
           return;
         } else {
           localData.push({ address: address, pnl: pnl_, volumn: volumn_ });
-          alert(`👎Not passed! You can't add this wallet! Pnl is ${pnl_}`);
+          alert(`👎 Not passed! You can't add this wallet! Pnl is ${pnl_}`);
+          setName("");
+          setAddress("");
           return;
         }
       } catch (err) {
@@ -213,6 +223,7 @@ const Dashboard: React.FC = () => {
       return alert("Please input wallet address.");
     }
     if (!isValidSolanaAddress(address)) {
+      setAddress("");
       return alert("❗️The wallet address is invalid.");
     }
 
@@ -223,9 +234,9 @@ const Dashboard: React.FC = () => {
     });
 
     if (isExist.length > 0) {
-      return alert(
-        `👍Passed! You can add this wallet! Pnl is ${isExist[0].pnl | 0}`
-      );
+      setAddress("");
+      alert(`👍Passed! You can add this wallet! Pnl is ${isExist[0].pnl | 0}`);
+      return;
     }
 
     const isExist_ = localData.filter((val) => {
@@ -234,11 +245,15 @@ const Dashboard: React.FC = () => {
 
     if (isExist_.length > 0) {
       if (Number(isExist_[0].pnl) > 250000) {
+        setAddress("");
         alert(`👍Passed! You can add this wallet! Pnl is ${isExist_[0].pnl}`);
+        return;
       } else {
+        setAddress("");
         alert(
           `👎Not passed! You can't add this wallet! Pnl is ${isExist_[0].pnl}`
         );
+        return;
       }
     } else {
       // function generateRandomNumber(min: number, max: number) {
@@ -253,14 +268,16 @@ const Dashboard: React.FC = () => {
       // console.log("pnl---------", pnl_);
 
       if (pnl_ > 250000) {
+        setAddress("");
         localData.push({ address: address, pnl: pnl_, volumn: volumn_ });
         alert(`👍Passed! You can add this wallet! Pnl is ${pnl_}`);
       } else {
+        setAddress("");
         localData.push({ address: address, pnl: pnl_, volumn: volumn_ });
         alert(`👎Not passed! You can't add this wallet! Pnl is ${pnl_}`);
       }
-      setAddress("");
     }
+    setAddress("");
   };
 
   function isValidSolanaAddress(address: string) {
