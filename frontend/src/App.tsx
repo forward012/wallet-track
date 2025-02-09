@@ -109,14 +109,24 @@ const Dashboard: React.FC = () => {
     try {
       console.log(searchText);
 
-      const response = await axios.post(`${API_URL}/api/findOne`, {
-        address: searchText,
+      // const response = await axios.post(`${API_URL}/api/findOne`, {
+      //   address: searchText,
+      // });
+
+      const isExist = data.filter((val) => {
+        return searchText == val.address;
       });
-      if (response.data) {
-        console.log("Response:", [response.data]);
+  
+      console.log(isExist);
+  
+      if (isExist.length > 0) {
+        console.log("Response:", isExist);
         setData([]);
-        setData([response.data]);
+        setData(isExist);
+      } else {
+        return alert("This wallet not found!")
       }
+      
     } catch (err) {
       alert(err);
     }
