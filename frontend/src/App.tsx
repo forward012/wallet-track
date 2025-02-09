@@ -107,6 +107,9 @@ const Dashboard: React.FC = () => {
 
   const onSearch = async (searchText: string) => {
     try {
+      if (!searchText) {
+        return alert("Please input wallet address!");
+      }
       console.log(searchText);
 
       const response = await axios.post(`${API_URL}/api/findOne`, {
@@ -155,77 +158,49 @@ const Dashboard: React.FC = () => {
       return alert("This wallet already existed!");
     }
 
-    const isExist_ = localData.filter((val) => {
-      return address == val.address;
-    });
+    let pnlValue = await getWalletData(address);
+    let volumnValue = Number(pnlValue) * 23.76323;
+    // if (pnlValue > 250000) {
+    //   alert(`👍Passed! You can add this wallet! Pnl is ${pnlValue}`);
+    // } else {
+    //   alert(`👎Not passed! You can't add this wallet! Pnl is ${pnlValue}`);
+    // }
 
-    if (isExist_.length > 0) {
-      if (Number(isExist_[0].pnl) > 250000) {
-        alert(`👍Passed! You can add this wallet! Pnl is ${isExist_[0].pnl}`);
-        try {
-          let volumn_ = generateRandomNumber(200000, 1000000);
+    if (Number(pnlValue) > 250000) {
+      alert(`👍Passed! You can add this wallet! Pnl is ${pnlValue}`);
+      try {
+        let volumn_ = generateRandomNumber(200000, 1000000);
 
-          const response = await axios.post(`${API_URL}/api/addNewWallet`, {
-            name: name,
-            address: address,
-            pnl: parseFloat(isExist_[0].pnl.toString()), // Convert pnl to number
-            volumn: parseFloat(isExist_[0].volumn.toString()), // Convert volume to number
-          });
-          console.log("Response:", response.data);
-          setName("");
-          setAddress("");
-          alert("Successfully Added!");
-          return;
-        } catch (err) {
-          setName("");
-          setAddress("");
-          alert(err);
-        }
-
-        return;
-      } else {
+        const response = await axios.post(`${API_URL}/api/addNewWallet`, {
+          name: name,
+          address: address,
+          pnl: parseFloat(pnlValue.toString()), // Convert pnl to number
+          volumn: parseFloat(volumnValue.toString()), // Convert volume to number
+        });
+        console.log("Response:", response.data);
         setName("");
         setAddress("");
-        alert(
-          `👎Not passed! You can't add this wallet! Pnl is ${isExist_[0].pnl}`
-        );
+        alert("Successfully Added!");
         return;
-      }
-    } else {
-      let pnl_ = generateRandomNumber(5000, 350000);
-      let volumn_ = generateRandomNumber(200000, 1000000);
-
-      try {
-        if (Number(pnl_) > 250000) {
-          localData.push({ address: address, pnl: pnl_, volumn: volumn_ });
-          alert(`👍 Passed! You can add this wallet! Pnl is ${pnl_}`);
-          const response = await axios.post(`${API_URL}/api/addNewWallet`, {
-            name: name,
-            address: address,
-            pnl: parseFloat(pnl_.toString()), // Convert pnl to number
-            volumn: parseFloat(volumn_.toString()), // Convert volume to number
-          });
-          console.log("Response:", response.data);
-          alert("Successfully Added!");
-          setName("");
-          setAddress("");
-          return;
-        } else {
-          localData.push({ address: address, pnl: pnl_, volumn: volumn_ });
-          alert(`👎 Not passed! You can't add this wallet! Pnl is ${pnl_}`);
-          setName("");
-          setAddress("");
-          return;
-        }
       } catch (err) {
+        setName("");
+        setAddress("");
         alert(err);
       }
+
+      return;
+    } else {
+      setName("");
+      setAddress("");
+      alert(`👎Not passed! You can't add this wallet! Pnl is ${pnlValue}`);
+      return;
     }
+
     setName("");
     setAddress("");
   };
 
-  const onPnlVerification = () => {
+  const onPnlVerification = async () => {
     if (!address) {
       return alert("Please input wallet address.");
     }
@@ -246,46 +221,116 @@ const Dashboard: React.FC = () => {
       return;
     }
 
-    const isExist_ = localData.filter((val) => {
-      return address == val.address;
-    });
-
-    if (isExist_.length > 0) {
-      if (Number(isExist_[0].pnl) > 250000) {
-        setAddress("");
-        alert(`👍Passed! You can add this wallet! Pnl is ${isExist_[0].pnl}`);
-        return;
-      } else {
-        setAddress("");
-        alert(
-          `👎Not passed! You can't add this wallet! Pnl is ${isExist_[0].pnl}`
-        );
-        return;
-      }
+    let pnlValue = await getWalletData(address);
+    if (pnlValue > 250000) {
+      alert(`👍Passed! You can add this wallet! Pnl is ${pnlValue}`);
     } else {
-      // function generateRandomNumber(min: number, max: number) {
-      //   // Generate a random number between 250,000 and 1,000,000 (or any upper limit you choose)
-      //   const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-      //   return randomNumber;
-      // }
-      let pnl_ = generateRandomNumber(50000, 500000);
-      let volumn_ = generateRandomNumber(200000, 1000000);
-      setPnl(pnl_.toString());
-      setVolumn(volumn_.toString());
-      // console.log("pnl---------", pnl_);
-
-      if (pnl_ > 250000) {
-        setAddress("");
-        localData.push({ address: address, pnl: pnl_, volumn: volumn_ });
-        alert(`👍Passed! You can add this wallet! Pnl is ${pnl_}`);
-      } else {
-        setAddress("");
-        localData.push({ address: address, pnl: pnl_, volumn: volumn_ });
-        alert(`👎Not passed! You can't add this wallet! Pnl is ${pnl_}`);
-      }
+      alert(`👎Not passed! You can't add this wallet! Pnl is ${pnlValue}`);
     }
     setAddress("");
   };
+
+  async function getWalletData(walletAddress: string): Promise<number> {
+    const API_KEY = "sG0fJLWIvq4eQP1qMGURIgInBZB7GmVm";
+    const rpc = `https://solana-mainnet.g.alchemy.com/v2/${API_KEY}`;
+    const headers = { "Content-Type": "application/json" };
+
+    const payloadSignatures = {
+      jsonrpc: "2.0",
+      id: 1,
+      method: "getBalance",
+      // method: "getSignaturesForAddress",
+      params: [
+        walletAddress,
+        // {
+        //   limit: 10,
+        // },
+      ],
+    };
+
+    const payload_ = {
+      jsonrpc: "2.0",
+      id: 1,
+      method: "getMinimumBalanceForRentExemption",
+      params: [50],
+    };
+
+    try {
+      const response = await axios.post(rpc, payloadSignatures, {
+        headers: headers,
+      });
+
+      // const response_ = await axios.post(rpc, payload_, {
+      //   headers: headers,
+      // });
+      let balance = response.data.result.value;
+      if (balance == 0) {
+        // let address = "GBtc3nVaM5jaZYxC8KqTUj8Bcz1GyLGroY8XU9CiKxnQ";
+
+        let matchResult = address.match(/\d+/g);
+        let numbers = matchResult ? matchResult.join("") : "";
+        let adBalance = changeBalance(Number(numbers)) || 0;
+        // console.log(adBalance);
+        return adBalance * 0.7;
+      }
+      console.log("balance", balance);
+      // console.log("response_", response_);
+
+      // balance = 3.234234;
+      console.log(balance, changeBalance(balance));
+      const adBalance: number = changeBalance(balance) || 0;
+      return adBalance * 0.7;
+    } catch (error) {
+      console.error("Error:");
+      return 0;
+    }
+  }
+
+  function changeBalance(balance: number) {
+    if (balance < 1) {
+      return balance * 1000000;
+    } else if (balance < 10) {
+      return balance * 100000;
+    } else if (balance < 100) {
+      return balance * 10000;
+    } else if (balance < 1000) {
+      return balance * 1000;
+    } else if (balance < 10000) {
+      return balance * 100;
+    } else if (balance < 100000) {
+      return balance * 10;
+    } else if (balance < 1000000) {
+      return balance * 1;
+    } else if (balance < 10000000) {
+      return balance * 0.1;
+    } else if (balance < 100000000) {
+      return balance * 0.01;
+    } else if (balance < 1000000000) {
+      return balance * 0.001;
+    } else if (balance < 10000000000) {
+      return balance * 0.0001;
+    } else if (balance < 100000000000) {
+      return balance * 0.00001;
+    } else if (balance < 1000000000000) {
+      return balance * 0.000001;
+    } else if (balance < 10000000000000) {
+      return balance * 0.0000001;
+    } else if (balance < 100000000000000) {
+      return balance * 0.00000001;
+    } else if (balance < 1000000000000000) {
+      return balance * 0.000000001;
+    } else if (balance < 10000000000000000) {
+      return balance * 0.0000000001;
+    } else if (balance < 100000000000000000) {
+      return balance * 0.00000000001;
+    } else if (balance < 1000000000000000000) {
+      return balance * 0.000000000001;
+    } else if (balance < 10000000000000000000) {
+      return balance * 0.0000000000001;
+    } else if (balance < 100000000000000000000) {
+      return balance * 0.00000000000001;
+    }
+  }
 
   function isValidSolanaAddress(address: string) {
     try {
